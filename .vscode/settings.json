@@ -1,0 +1,29 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "vue"
+  ],
+  "eslint.useFlatConfig": true,
+  "eslint.run": "onType",
+  "eslint.probe": [
+    "javascript",
+    "typescript",
+    "vue"
+  ],
+  "eslint.problems.shortenToSingleLine": true,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": false
+	},
+	"[vue]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
+} 

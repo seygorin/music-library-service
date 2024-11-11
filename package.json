@@ -1,0 +1,30 @@
+{
+  "name": "music-library-service",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.{js,ts,vue,scss,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,vue,scss,json,md}\"",
+    "typecheck": "nuxi typecheck"
+  },
+  "dependencies": {
+    "@nuxt/eslint": "^0.6.1",
+    "@pinia/nuxt": "^0.5.1",
+    "nuxt": "^3.14.159",
+    "vue": "latest",
+    "vue-router": "latest"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "sass": "^1.80.6",
+    "sass-loader": "^16.0.3",
+    "typescript": "^5.6.3"
+  }
+}
