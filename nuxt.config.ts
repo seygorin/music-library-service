@@ -28,6 +28,12 @@ export default defineNuxtConfig({
     ]
   },
 
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: 'http://localhost:4000/api'
+    }
+  },
+
   nitro: {
     devProxy: {
       '/api': {
