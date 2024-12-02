@@ -36,6 +36,8 @@ const toggleFavorite = async () => {
     } else {
       await store.addToFavorites('album', props.album.id)
     }
+  } catch (error) {
+    console.error(error)
   }
 }
 
