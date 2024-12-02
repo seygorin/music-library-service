@@ -22,6 +22,19 @@ export default defineNuxtConfig({
   },
 
   components: {
-    dirs: ['~/components'],
+    dirs: [
+      '~/components',
+      '~/components/modals'
+    ]
   },
+
+  nitro: {
+    devProxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        prependPath: true,
+      }
+    }
+  }
 })

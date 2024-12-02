@@ -18,3 +18,61 @@ body {
   max-width: 1200px;
   margin: 0 auto;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+
+  label {
+    color: $text-secondary;
+  }
+
+  input, select {
+    padding: $spacing-sm;
+    background: $background-primary;
+    border: 1px solid $background-secondary;
+    border-radius: 4px;
+    color: $text-primary;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+}
+
+.button {
+  padding: $spacing-sm $spacing-md;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &.primary {
+    background: $primary-color;
+    color: $text-primary;
+  }
+
+  &.secondary {
+    background: $background-secondary;
+    color: $text-primary;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $text-secondary;
+}

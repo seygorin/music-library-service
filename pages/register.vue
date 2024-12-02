@@ -1,7 +1,7 @@
 <template>
-  <div class="login">
-    <h1 class="title">Login</h1>
-    <form @submit.prevent="handleLogin" class="login-form">
+  <div class="register">
+    <h1 class="title">Register</h1>
+    <form @submit.prevent="handleRegister" class="register-form">
       <div class="form-group">
         <label for="login">Username</label>
         <input
@@ -9,7 +9,7 @@
           v-model="form.login"
           type="text"
           required
-          placeholder="Enter your username"
+          placeholder="Choose a username"
         />
       </div>
       <div class="form-group">
@@ -19,16 +19,26 @@
           v-model="form.password"
           type="password"
           required
-          placeholder="Enter your password"
+          placeholder="Choose a password"
         />
       </div>
-      <button type="submit" class="login-button" :disabled="loading">
-        {{ loading ? 'Logging in...' : 'Login' }}
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          v-model="form.confirmPassword"
+          type="password"
+          required
+          placeholder="Confirm your password"
+        />
+      </div>
+      <button type="submit" class="register-button" :disabled="loading || !isValid">
+        {{ loading ? 'Registering...' : 'Register' }}
       </button>
     </form>
-    <p class="register-link">
-      Don't have an account?
-      <NuxtLink to="/register">Register here</NuxtLink>
+    <p class="login-link">
+      Already have an account?
+      <NuxtLink to="/login">Login here</NuxtLink>
     </p>
   </div>
 </template>
@@ -41,15 +51,22 @@ const loading = ref(false)
 const form = ref({
   login: '',
   password: '',
+  confirmPassword: '',
 })
 
-const handleLogin = async () => {
+const isValid = computed(
+  () => form.value.password === form.value.confirmPassword && form.value.password.length >= 6
+)
+
+const handleRegister = async () => {
+  if (!isValid.value) return
+
   try {
     loading.value = true
-    await auth.login(form.value)
-    router.push('/')
+    await auth.register(form.value)
+    router.push('/login')
   } catch (error) {
-    console.error('Login failed:', error)
+    console.error('Registration failed:', error)
   } finally {
     loading.value = false
   }
@@ -57,7 +74,7 @@ const handleLogin = async () => {
 </script>
 
 <style lang="scss" scoped>
-.login {
+.register {
   max-width: 400px;
   margin: 0 auto;
   padding: $spacing-xl;
@@ -69,7 +86,7 @@ const handleLogin = async () => {
   color: $primary-color;
 }
 
-.login-form {
+.register-form {
   display: flex;
   flex-direction: column;
   gap: $spacing-lg;
@@ -98,7 +115,7 @@ const handleLogin = async () => {
   }
 }
 
-.login-button {
+.register-button {
   background-color: $primary-color;
   color: $text-primary;
   padding: $spacing-md;
@@ -111,7 +128,7 @@ const handleLogin = async () => {
   }
 }
 
-.register-link {
+.login-link {
   text-align: center;
   margin-top: $spacing-lg;
   color: $text-secondary;
