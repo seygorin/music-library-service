@@ -16,7 +16,7 @@ export const api = {
     const response = await fetch(`${BASE_URL}/artist`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     })
     return this.handleResponse(response)
   },
@@ -25,14 +25,14 @@ export const api = {
     const response = await fetch(`${BASE_URL}/artist/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     })
     return this.handleResponse(response)
   },
 
   async deleteArtist(id: string) {
     const response = await fetch(`${BASE_URL}/artist/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     })
     return this.handleResponse(response)
   },
@@ -52,23 +52,26 @@ export const api = {
     const response = await fetch(`${BASE_URL}/album`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     })
-    return this.handleResponse(response)
+    if (!response.ok) {
+      throw new Error('Failed to create album')
+    }
+    return response.json()
   },
 
   async updateAlbum(id: string, data: Partial<Album>) {
     const response = await fetch(`${BASE_URL}/album/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     })
     return this.handleResponse(response)
   },
 
   async deleteAlbum(id: string) {
     const response = await fetch(`${BASE_URL}/album/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     })
     return this.handleResponse(response)
   },
@@ -88,7 +91,7 @@ export const api = {
     const response = await fetch(`${BASE_URL}/track`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     })
     return this.handleResponse(response)
   },
@@ -97,14 +100,14 @@ export const api = {
     const response = await fetch(`${BASE_URL}/track/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     })
     return this.handleResponse(response)
   },
 
   async deleteTrack(id: string) {
     const response = await fetch(`${BASE_URL}/track/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     })
     return this.handleResponse(response)
   },
@@ -117,14 +120,14 @@ export const api = {
 
   async addToFavorites(type: 'artist' | 'album' | 'track', id: string) {
     const response = await fetch(`${BASE_URL}/favs/${type}/${id}`, {
-      method: 'POST'
+      method: 'POST',
     })
     return this.handleResponse(response)
   },
 
   async removeFromFavorites(type: 'artist' | 'album' | 'track', id: string) {
     const response = await fetch(`${BASE_URL}/favs/${type}/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     })
     return this.handleResponse(response)
   },
@@ -136,5 +139,5 @@ export const api = {
       throw new Error(error.message || `API request failed with status ${response.status}`)
     }
     return response.json()
-  }
+  },
 }

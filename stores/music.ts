@@ -93,8 +93,8 @@ export const useMusicStore = defineStore('music', {
         this.loading = true
         this.tracks = await api.getTracks()
       } catch (error) {
+        console.error('Failed to fetch tracks:', error)
         this.error = 'Failed to fetch tracks'
-        throw error
       } finally {
         this.loading = false
       }
@@ -128,6 +128,50 @@ export const useMusicStore = defineStore('music', {
         await this.fetchFavorites()
       } catch (error) {
         this.error = `Failed to remove ${type} from favorites`
+        throw error
+      }
+    },
+
+    async createAlbum(data: Omit<Album, 'id'>) {
+      try {
+        const response = await api.createAlbum(data)
+        this.albums.push(response)
+      } catch (error) {
+        console.error('Failed to create album:', error)
+      }
+    },
+
+    async createTrack(data: Omit<Track, 'id'>) {
+      try {
+        const response = await api.createTrack(data)
+        this.tracks.push(response)
+        return response
+      } catch (error) {
+        console.error('Failed to create track:', error)
+        throw error
+      }
+    },
+
+    async updateTrack(id: string, data: Partial<Track>) {
+      try {
+        const response = await api.updateTrack(id, data)
+        const index = this.tracks.findIndex((t) => t.id === id)
+        if (index !== -1) {
+          this.tracks[index] = response
+        }
+        return response
+      } catch (error) {
+        console.error('Failed to update track:', error)
+        throw error
+      }
+    },
+
+    async deleteTrack(id: string) {
+      try {
+        await api.deleteTrack(id)
+        this.tracks = this.tracks.filter((t) => t.id !== id)
+      } catch (error) {
+        console.error('Failed to delete track:', error)
         throw error
       }
     },

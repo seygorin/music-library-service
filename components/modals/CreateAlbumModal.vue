@@ -8,24 +8,7 @@
 
       <div class="form-group">
         <label for="year">Year</label>
-        <input
-          id="year"
-          v-model.number="form.year"
-          type="number"
-          required
-          min="1900"
-          :max="currentYear"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="artist">Artist</label>
-        <select id="artist" v-model="form.artistId" required>
-          <option value="">Select Artist</option>
-          <option v-for="artist in store.artists" :key="artist.id" :value="artist.id">
-            {{ artist.name }}
-          </option>
-        </select>
+        <input id="year" v-model="form.year" type="number" required placeholder="Release year" />
       </div>
 
       <div class="form-actions">
@@ -40,18 +23,27 @@
 
 <script setup lang="ts">
 import type { Album } from '@/types'
+import BaseModal from './BaseModal.vue'
 
 const props = defineProps<{
   album?: Album
   artistId?: string
 }>()
 
-const store = useMusicStore()
-const currentYear = new Date().getFullYear()
+const emit = defineEmits<{
+  (e: 'close'): void
+  (e: 'submit', data: Omit<Album, 'id'>): void
+}>()
+
+const isEdit = computed(() => !!props.album)
 
 const form = ref({
   name: props.album?.name ?? '',
-  year: props.album?.year ?? currentYear,
+  year: props.album?.year ?? new Date().getFullYear(),
   artistId: props.album?.artistId ?? props.artistId ?? '',
 })
+
+const handleSubmit = () => {
+  emit('submit', form.value)
+}
 </script>

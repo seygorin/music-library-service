@@ -28,6 +28,9 @@
 </template>
 
 <script setup lang="ts">
+import LoadingSpinner from '~/components/LoadingSpinner.vue'
+import CreateAlbumModal from '~/components/modals/CreateAlbumModal.vue'
+
 const route = useRoute()
 const artistId = route.params.id as string
 const store = useMusicStore()
