@@ -22,16 +22,13 @@ export default defineNuxtConfig({
   },
 
   components: {
-    dirs: [
-      '~/components',
-      '~/components/modals'
-    ]
+    dirs: ['~/components', '~/components/modals'],
   },
 
   runtimeConfig: {
     public: {
-      apiBaseUrl: 'http://localhost:4000/api'
-    }
+      apiBaseUrl: 'http://localhost:4000/api',
+    },
   },
 
   nitro: {
@@ -40,7 +37,13 @@ export default defineNuxtConfig({
         target: 'http://localhost:4000',
         changeOrigin: true,
         prependPath: true,
-      }
-    }
-  }
+      },
+    },
+  },
+
+  router: {
+    middleware: ['auth'],
+  },
+
+  plugins: ['~/plugins/auth.client.ts'],
 })
