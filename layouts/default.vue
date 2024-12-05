@@ -1,21 +1,21 @@
 <template>
   <div class="layout">
     <header class="header">
-      <nav class="nav">
+      <nav class="nav container">
         <NuxtLink to="/" class="logo">Music Library</NuxtLink>
         <div class="nav-links">
           <template v-if="auth.isAuthenticated">
-            <span class="user-name">{{ auth.user?.name }}</span>
-            <button @click="handleLogout" class="nav-button">Logout</button>
+            <span class="user-name">{{ auth.user?.login }}</span>
+            <button class="button primary" @click="handleLogout">Logout</button>
           </template>
           <template v-else>
-            <NuxtLink to="/login" class="nav-link">Login</NuxtLink>
+            <NuxtLink to="/login" class="button primary">Login</NuxtLink>
           </template>
         </div>
       </nav>
     </header>
 
-    <main class="main">
+    <main class="main container">
       <slot />
     </main>
   </div>
@@ -32,18 +32,20 @@ const handleLogout = () => {
 </script>
 
 <style lang="scss">
-@use '@/assets/styles/main.scss' as *;
-
 .layout {
-  @extend .container;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+.main {
+  width: 100%;
+}
+
 .header {
   background-color: $background-secondary;
-  padding: $spacing-md 0;
+  padding: $spacing-md;
+  width: 100%;
 }
 
 .nav {
@@ -62,35 +64,11 @@ const handleLogout = () => {
 .nav-links {
   display: flex;
   gap: $spacing-md;
-}
-
-.nav-link {
-  color: $text-primary;
-  text-decoration: none;
-
-  &:hover {
-    color: $primary-color;
-  }
-}
-
-.main {
-  flex: 1;
-  padding: $spacing-xl 0;
+  align-items: center;
 }
 
 .user-name {
   color: $text-secondary;
-}
-
-.nav-button {
-  background: none;
-  border: none;
-  color: $text-primary;
-  cursor: pointer;
-  padding: $spacing-sm $spacing-md;
-
-  &:hover {
-    color: $primary-color;
-  }
+  margin-right: $spacing-sm;
 }
 </style>

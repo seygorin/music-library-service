@@ -55,6 +55,16 @@ body {
   cursor: pointer;
   font-weight: 500;
   transition: opacity 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 90px;
+  height: 30px;
+  font-size: 14px;
+  line-height: 1;
+  box-sizing: border-box;
 
   &:hover {
     opacity: 0.9;

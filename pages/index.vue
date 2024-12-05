@@ -3,7 +3,7 @@
     <h1 class="title">Welcome to Music Library</h1>
     <p class="description">Discover and manage your favorite music</p>
 
-    <div class="actions">
+    <div>
       <NuxtLink to="/artists" class="explore-button">
         <span class="button-content">
           <span class="icon">🎵</span>
@@ -38,10 +38,6 @@
   font-size: 1.2rem;
   color: $text-secondary;
   margin-bottom: $spacing-xl;
-}
-
-.actions {
-  margin-top: $spacing-xl;
 }
 
 .explore-button {
