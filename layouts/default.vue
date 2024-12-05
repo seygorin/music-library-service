@@ -27,12 +27,14 @@ import { useToast } from 'vue-toastification'
 
 const auth = useAuthStore()
 const router = useRouter()
-const toast = useToast()
+const toast = import.meta.client ? useToast() : null
 
 const handleLogout = () => {
   auth.logout()
   router.push('/login')
-  toast.success('Logged out successfully')
+  if (import.meta.client) {
+    toast?.success('Logged out successfully')
+  }
 }
 </script>
 

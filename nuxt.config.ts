@@ -45,5 +45,5 @@ export default defineNuxtConfig({
     middleware: ['auth'],
   },
 
-  plugins: ['~/plugins/auth.client.ts'],
+  plugins: ['~/plugins/auth.client.ts', '~/plugins/toast.client.ts'],
 })
