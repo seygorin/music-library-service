@@ -17,7 +17,9 @@
   "dependencies": {
     "@nuxt/eslint": "^0.6.1",
     "@pinia/nuxt": "^0.5.1",
+    "@types/three": "^0.170.0",
     "nuxt": "^3.14.159",
+    "three": "^0.171.0",
     "vue": "latest",
     "vue-router": "latest",
     "vue-toastification": "^2.0.0-rc.5"

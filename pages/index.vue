@@ -11,30 +11,43 @@
         </span>
       </NuxtLink>
     </div>
+
+    <ThreeDModel />
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ThreeDModel from '~/components/ThreeDModel.vue'
+</script>
 
 <style lang="scss" scoped>
 .home {
+  position: relative;
   text-align: center;
   padding: $spacing-xl 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: $spacing-xl;
+  z-index: 1;
 }
 
 .title {
   font-size: 2.5rem;
   font-weight: bold;
+  background-color: $background-primary;
+  padding: 0 $spacing-sm;
+
+  border-radius: 8px;
   margin-bottom: $spacing-lg;
   color: $primary-color;
 }
 
 .description {
   font-size: 1.2rem;
+  background-color: $background-primary;
+  padding: $spacing-sm;
+  border-radius: 8px;
   color: $text-secondary;
   margin-bottom: $spacing-xl;
 }
