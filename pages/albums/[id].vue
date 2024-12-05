@@ -73,11 +73,11 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: $spacing-xl;
+	border-radius: 8px;
 }
 
 .title-section {
   display: flex;
-  flex-direction: column;
   gap: $spacing-sm;
 }
 

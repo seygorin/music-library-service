@@ -50,6 +50,7 @@ const handleCreate = async (data: Omit<Artist, 'id'>) => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: $spacing-xl;
+	border-radius: 8px;
 }
 
 .artists-grid {

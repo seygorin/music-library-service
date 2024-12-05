@@ -55,10 +55,17 @@ const handleUpdate = async (data: Partial<Album>) => {
 
 <style lang="scss" scoped>
 .album-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   background: $background-secondary;
   border-radius: 8px;
   padding: $spacing-lg;
-  margin: $spacing-md 0;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .album-header {

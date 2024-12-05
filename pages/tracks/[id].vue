@@ -3,8 +3,8 @@
     <div class="header">
       <div class="title-section">
         <NuxtLink :to="`/albums/${album?.artistId}`" class="back-link">← Back to Albums</NuxtLink>
-        <h1>{{ album?.name }}</h1>
         <p class="subtitle">Album by {{ artist?.name }}</p>
+        <h1>{{ album?.name }}</h1>
       </div>
       <button @click="showCreateModal = true" class="button primary">Add Track</button>
     </div>
@@ -13,9 +13,9 @@
 
     <template v-else>
       <div v-if="albumTracks.length" class="tracks-grid">
-        <TrackCard 
-          v-for="(track, index) in albumTracks" 
-          :key="track.id" 
+        <TrackCard
+          v-for="(track, index) in albumTracks"
+          :key="track.id"
           :track="track"
           :index="index"
         />
@@ -80,11 +80,11 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: $spacing-xl;
+	border-radius: 8px;
 }
 
 .title-section {
   display: flex;
-  flex-direction: column;
   gap: $spacing-sm;
 }
 

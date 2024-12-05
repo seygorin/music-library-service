@@ -34,8 +34,11 @@
 </template>
 
 <script setup lang="ts">
+import { useToast } from 'vue-toastification'
+
 const auth = useAuthStore()
 const router = useRouter()
+const toast = useToast()
 const loading = ref(false)
 
 const form = ref({
@@ -47,8 +50,10 @@ const handleLogin = async () => {
   try {
     loading.value = true
     await auth.login(form.value)
+    toast.success('Successfully logged in!')
     router.push('/')
   } catch (error) {
+    toast.error('Login failed. Please check your credentials.')
     console.error('Login failed:', error)
   } finally {
     loading.value = false

@@ -81,8 +81,13 @@ const handleDelete = async () => {
   align-items: center;
   padding: $spacing-md;
   background: $background-secondary;
-  border-radius: 8px;
   margin-bottom: $spacing-sm;
+  transition: transform 0.2s;
+	border-radius: 8px;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .track-info {

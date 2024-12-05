@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :title="isEdit ? 'Edit Artist' : 'Create Artist'">
+  <BaseModal :title="isEdit ? 'Edit Artist' : 'Create Artist'" @close="handleClose">
     <form @submit.prevent="handleSubmit" class="form">
       <div class="form-group">
         <label for="name">Name</label>
@@ -14,7 +14,7 @@
       </div>
 
       <div class="form-actions">
-        <button type="button" @click="$emit('close')" class="button secondary">Cancel</button>
+        <button type="button" @click="handleClose" class="button secondary">Cancel</button>
         <button type="submit" class="button primary">
           {{ isEdit ? 'Update' : 'Create' }}
         </button>
@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 import type { Artist } from '@/types'
+import BaseModal from './BaseModal.vue'
 
 const props = defineProps<{
   artist?: Artist
@@ -41,6 +42,11 @@ const form = ref({
   name: props.artist?.name ?? '',
   grammy: props.artist?.grammy ?? false,
 })
+
+const handleClose = () => {
+  console.log('CreateArtistModal: Closing modal')
+  emit('close')
+}
 
 const handleSubmit = () => {
   emit('submit', {

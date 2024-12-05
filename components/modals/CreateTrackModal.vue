@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :title="isEdit ? 'Edit Track' : 'Create Track'">
+  <BaseModal :title="isEdit ? 'Edit Track' : 'Create Track'" @close="handleClose">
     <form class="form" @submit.prevent="handleSubmit">
       <div class="form-group">
         <label for="name">Name</label>
@@ -19,7 +19,7 @@
       </div>
 
       <div class="form-actions">
-        <button type="button" class="button secondary" @click="$emit('close')">Cancel</button>
+        <button type="button" class="button secondary" @click="handleClose">Cancel</button>
         <button type="submit" class="button primary">
           {{ isEdit ? 'Update' : 'Create' }}
         </button>
@@ -50,6 +50,11 @@ const form = ref({
   duration: props.track?.duration ?? 0,
   albumId: props.track?.albumId ?? props.albumId,
 })
+
+const handleClose = () => {
+  console.log('CreateTrackModal: Closing modal')
+  emit('close')
+}
 
 const handleSubmit = () => {
   emit('submit', form.value)

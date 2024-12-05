@@ -1,9 +1,9 @@
 <template>
-  <div class="modal-overlay" @click="$emit('close')">
+  <div class="modal-overlay" @click.self="handleClose">
     <div class="modal" @click.stop>
       <div class="modal-header">
         <h3 class="modal-title">{{ title }}</h3>
-        <button class="close-button" @click="$emit('close')">&times;</button>
+        <button class="close-button" @click="handleClose">&times;</button>
       </div>
       <div class="modal-content">
         <slot></slot>
@@ -17,9 +17,13 @@ defineProps<{
   title: string
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'close'): void
 }>()
+
+const handleClose = () => {
+  emit('close')
+}
 </script>
 
 <style lang="scss" scoped>

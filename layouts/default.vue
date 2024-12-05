@@ -22,12 +22,16 @@
 </template>
 
 <script setup lang="ts">
+import { useToast } from 'vue-toastification';
+
 const auth = useAuthStore()
 const router = useRouter()
+const toast = useToast()
 
 const handleLogout = () => {
   auth.logout()
   router.push('/login')
+  toast.success('Logged out successfully')
 }
 </script>
 

@@ -7,9 +7,8 @@
       <NuxtLink to="/artists" class="explore-button">
         <span class="button-content">
           <span class="icon">🎵</span>
-          Explore Music Collection
+          Explore Music Collection &rarr;
         </span>
-        <span class="arrow">→</span>
       </NuxtLink>
     </div>
   </div>
@@ -66,9 +65,5 @@
 
 .icon {
   font-size: 1.5rem;
-}
-
-.arrow {
-  font-size: 1.2rem;
 }
 </style>
