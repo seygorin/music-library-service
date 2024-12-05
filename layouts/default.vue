@@ -5,6 +5,7 @@
         <NuxtLink to="/" class="logo">Music Library</NuxtLink>
         <div class="nav-links">
           <template v-if="auth.isAuthenticated">
+            <NuxtLink to="/favorites" class="button secondary"> ❤️ Favorites </NuxtLink>
             <span class="user-name">{{ auth.user?.login }}</span>
             <button class="button primary" @click="handleLogout">Logout</button>
           </template>
@@ -22,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { useToast } from 'vue-toastification';
+import { useToast } from 'vue-toastification'
 
 const auth = useAuthStore()
 const router = useRouter()
