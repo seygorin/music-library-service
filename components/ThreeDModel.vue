@@ -1,6 +1,7 @@
 <template>
   <div>
     <LoadingSpinner v-if="isLoading" class="model-spinner" />
+    <div v-if="error" class="error-message">{{ error }}</div>
     <div ref="canvasContainer" class="three-d-model"></div>
   </div>
 </template>
@@ -15,6 +16,13 @@ import LoadingSpinner from '~/components/LoadingSpinner.vue'
 
 const canvasContainer = ref<HTMLElement | null>(null)
 const isLoading = ref(true)
+const error = ref<string | null>(null)
+
+const MODEL_URLS = [
+  'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb',
+  '/models/fallback-model.glb',
+  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Box/glTF/Box.gltf',
+]
 
 onMounted(() => {
   if (!canvasContainer.value) return
@@ -22,7 +30,7 @@ onMounted(() => {
   const timeoutId = setTimeout(() => {
     if (isLoading.value) {
       isLoading.value = false
-      console.warn('3D model loading timed out')
+      error.value = 'Loading timed out'
     }
   }, 10000)
 
@@ -76,41 +84,52 @@ onMounted(() => {
 
   const loader = new GLTFLoader()
 
-  loader.load(
-    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb',
-    (gltf) => {
-      clearTimeout(timeoutId)
+  const loadModel = (urlIndex = 0) => {
+    if (urlIndex >= MODEL_URLS.length) {
+      error.value = 'Failed to load all models'
       isLoading.value = false
-
-      const model = gltf.scene
-      model.scale.set(0.48, 0.48, 0.48)
-      model.position.set(-0.2, 0, 0)
-
-      model.traverse((node) => {
-        if (node instanceof THREE.Mesh) {
-          node.castShadow = true
-          node.receiveShadow = true
-        }
-      })
-
-      modelScene.add(model)
-
-      const animate = () => {
-        requestAnimationFrame(animate)
-        model.rotation.y += 0.01
-        controls.update()
-        renderer.render(backgroundScene, camera)
-        effect.render(modelScene, camera)
-      }
-
-      animate()
-    },
-    (error) => {
-      clearTimeout(timeoutId)
-      isLoading.value = false
-      console.error('An error happened:', error)
+      return
     }
-  )
+
+    loader.load(
+      MODEL_URLS[urlIndex],
+      (gltf) => {
+        clearTimeout(timeoutId)
+        isLoading.value = false
+        error.value = null
+
+        const model = gltf.scene
+        model.scale.set(0.48, 0.48, 0.48)
+        model.position.set(-0.2, 0, 0)
+
+        model.traverse((node) => {
+          if (node instanceof THREE.Mesh) {
+            node.castShadow = true
+            node.receiveShadow = true
+          }
+        })
+
+        modelScene.add(model)
+
+        const animate = () => {
+          requestAnimationFrame(animate)
+          model.rotation.y += 0.01
+          controls.update()
+          renderer.render(backgroundScene, camera)
+          effect.render(modelScene, camera)
+        }
+
+        animate()
+      },
+      undefined,
+      (error) => {
+        console.warn(`Failed to load model from ${MODEL_URLS[urlIndex]}:`, error)
+        loadModel(urlIndex + 1)
+      }
+    )
+  }
+
+  loadModel()
 
   const handleResize = () => {
     if (!canvasContainer.value) return
@@ -148,5 +167,17 @@ onMounted(() => {
   height: calc(100vh - 68px);
   z-index: -1;
   overflow: hidden;
+}
+
+.error-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: red;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1rem;
+  border-radius: 4px;
+  z-index: 100;
 }
 </style>

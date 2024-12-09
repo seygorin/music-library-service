@@ -17,6 +17,7 @@
       <CreateTrackModal
         v-if="showEditModal"
         :track="track"
+        :album-id="track.albumId"
         @close="showEditModal = false"
         @submit="handleUpdate"
       />

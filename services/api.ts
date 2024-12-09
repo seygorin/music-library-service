@@ -1,19 +1,32 @@
-const BASE_URL = '/api'
+const DEV_MODE = process.env.NODE_ENV === 'development'
+const BASE_URL = DEV_MODE ? '/api' : process.env.NUXT_API_BASE_URL
 
 export const api = {
+  async fetch(endpoint: string, options?: RequestInit) {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      ...options,
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+    })
+    return response
+  },
+
   // Artists
   async getArtists() {
-    const response = await fetch(`${BASE_URL}/artist`)
+    const response = await this.fetch('/artist')
     return this.handleResponse(response)
   },
 
   async getArtist(id: string) {
-    const response = await fetch(`${BASE_URL}/artist/${id}`)
+    const response = await this.fetch(`/artist/${id}`)
     return this.handleResponse(response)
   },
 
   async createArtist(data: Omit<Artist, 'id'>) {
-    const response = await fetch(`${BASE_URL}/artist`, {
+    const response = await this.fetch('/artist', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -22,7 +35,7 @@ export const api = {
   },
 
   async updateArtist(id: string, data: Partial<Artist>) {
-    const response = await fetch(`${BASE_URL}/artist/${id}`, {
+    const response = await this.fetch(`/artist/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -31,7 +44,7 @@ export const api = {
   },
 
   async deleteArtist(id: string) {
-    const response = await fetch(`${BASE_URL}/artist/${id}`, {
+    const response = await this.fetch(`/artist/${id}`, {
       method: 'DELETE',
     })
     return this.handleResponse(response)
@@ -39,17 +52,17 @@ export const api = {
 
   // Albums
   async getAlbums() {
-    const response = await fetch(`${BASE_URL}/album`)
+    const response = await this.fetch('/album')
     return this.handleResponse(response)
   },
 
   async getAlbum(id: string) {
-    const response = await fetch(`${BASE_URL}/album/${id}`)
+    const response = await this.fetch(`/album/${id}`)
     return this.handleResponse(response)
   },
 
   async createAlbum(data: Omit<Album, 'id'>) {
-    const response = await fetch(`${BASE_URL}/album`, {
+    const response = await this.fetch('/album', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -61,7 +74,7 @@ export const api = {
   },
 
   async updateAlbum(id: string, data: Partial<Album>) {
-    const response = await fetch(`${BASE_URL}/album/${id}`, {
+    const response = await this.fetch(`/album/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -70,7 +83,7 @@ export const api = {
   },
 
   async deleteAlbum(id: string) {
-    const response = await fetch(`${BASE_URL}/album/${id}`, {
+    const response = await this.fetch(`/album/${id}`, {
       method: 'DELETE',
     })
     return this.handleResponse(response)
@@ -78,17 +91,17 @@ export const api = {
 
   // Tracks
   async getTracks() {
-    const response = await fetch(`${BASE_URL}/track`)
+    const response = await this.fetch('/track')
     return this.handleResponse(response)
   },
 
   async getTrack(id: string) {
-    const response = await fetch(`${BASE_URL}/track/${id}`)
+    const response = await this.fetch(`/track/${id}`)
     return this.handleResponse(response)
   },
 
   async createTrack(data: Omit<Track, 'id'>) {
-    const response = await fetch(`${BASE_URL}/track`, {
+    const response = await this.fetch('/track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -97,7 +110,7 @@ export const api = {
   },
 
   async updateTrack(id: string, data: Partial<Track>) {
-    const response = await fetch(`${BASE_URL}/track/${id}`, {
+    const response = await this.fetch(`/track/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -106,7 +119,7 @@ export const api = {
   },
 
   async deleteTrack(id: string) {
-    const response = await fetch(`${BASE_URL}/track/${id}`, {
+    const response = await this.fetch(`/track/${id}`, {
       method: 'DELETE',
     })
     return this.handleResponse(response)
@@ -114,19 +127,19 @@ export const api = {
 
   // Favorites
   async getFavorites() {
-    const response = await fetch(`${BASE_URL}/favs`)
+    const response = await this.fetch('/favs')
     return this.handleResponse(response)
   },
 
   async addToFavorites(type: 'artist' | 'album' | 'track', id: string) {
-    const response = await fetch(`${BASE_URL}/favs/${type}/${id}`, {
+    const response = await this.fetch(`/favs/${type}/${id}`, {
       method: 'POST',
     })
     return this.handleResponse(response)
   },
 
   async removeFromFavorites(type: 'artist' | 'album' | 'track', id: string) {
-    const response = await fetch(`${BASE_URL}/favs/${type}/${id}`, {
+    const response = await this.fetch(`/favs/${type}/${id}`, {
       method: 'DELETE',
     })
     return this.handleResponse(response)

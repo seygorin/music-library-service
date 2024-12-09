@@ -27,7 +27,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBaseUrl: 'http://localhost:4000/api',
+      apiBaseUrl: process.env.NUXT_API_BASE_URL || 'http://localhost:4000',
     },
   },
 
@@ -36,7 +36,8 @@ export default defineNuxtConfig({
       '/api': {
         target: 'http://localhost:4000',
         changeOrigin: true,
-        prependPath: true,
+        prependPath: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },
