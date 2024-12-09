@@ -3,44 +3,106 @@
     <div class="artist-header">
       <h3>{{ artist.name }}</h3>
       <div class="actions">
-        <button @click.stop="toggleFavorite" class="icon-button">
+        <button class="icon-button" @click.stop="toggleFavorite">
           {{ isFavorite ? '❤️' : '🤍' }}
         </button>
-        <button @click.stop="handleEdit" class="icon-button">✏️</button>
-        <button @click.stop="handleDelete" class="icon-button">🗑️</button>
+        <button
+          class="icon-button"
+          @click.stop.prevent="
+            (e) => {
+              e.preventDefault()
+              showEditModal = true
+            }
+          "
+        >
+          ✏️
+        </button>
+        <button
+          class="icon-button"
+          @click.stop.prevent="
+            (e) => {
+              e.preventDefault()
+              showDeleteModal = true
+            }
+          "
+        >
+          🗑️
+        </button>
       </div>
     </div>
     <div v-if="artist.grammy" class="grammy-badge">Grammy Winner 🏆</div>
+
+    <Teleport to="body">
+      <CreateArtistModal
+        v-if="showEditModal"
+        :artist="artist"
+        @close="showEditModal = false"
+        @submit="handleUpdate"
+      />
+
+      <DeleteConfirmModal
+        v-if="showDeleteModal"
+        :show="showDeleteModal"
+        item-type="artist"
+        :is-loading="isDeleting"
+        @close="showDeleteModal = false"
+        @confirm="handleDelete"
+      />
+    </Teleport>
   </NuxtLink>
 </template>
 
 <script setup lang="ts">
+import { useToast } from 'vue-toastification'
+import type { Artist } from '@/types'
+import CreateArtistModal from '~/components/modals/CreateArtistModal.vue'
+import DeleteConfirmModal from '~/components/modals/DeleteConfirmModal.vue'
+
 const props = defineProps<{
   artist: Artist
 }>()
 
 const store = useMusicStore()
+const toast = useToast()
 const showEditModal = ref(false)
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
+
 const isFavorite = computed(() => store.favorites.artists.some((a) => a.id === props.artist.id))
 
 const toggleFavorite = async (e: Event) => {
   e.preventDefault()
-  if (isFavorite.value) {
-    await store.removeFromFavorites('artist', props.artist.id)
-  } else {
-    await store.addToFavorites('artist', props.artist.id)
+  try {
+    if (isFavorite.value) {
+      await store.removeFromFavorites('artist', props.artist.id)
+    } else {
+      await store.addToFavorites('artist', props.artist.id)
+    }
+  } catch (error) {
+    toast.error(`Failed to update favorites: ${error}`)
   }
 }
 
-const handleEdit = (e: Event) => {
-  e.preventDefault()
-  showEditModal.value = true
+const handleDelete = async () => {
+  try {
+    isDeleting.value = true
+    await store.deleteArtist(props.artist.id)
+    toast.success('Artist deleted successfully')
+  } catch (error) {
+    toast.error(`Failed to delete artist: ${error}`)
+  } finally {
+    isDeleting.value = false
+    showDeleteModal.value = false
+  }
 }
 
-const handleDelete = async (e: Event) => {
-  e.preventDefault()
-  if (confirm('Are you sure you want to delete this artist?')) {
-    await store.deleteArtist(props.artist.id)
+const handleUpdate = async (data: Partial<Artist>) => {
+  try {
+    await store.updateArtist(props.artist.id, data)
+    showEditModal.value = false
+    toast.success('Artist updated successfully')
+  } catch (error) {
+    toast.error(`Failed to update artist: ${error}`)
   }
 }
 </script>
@@ -77,7 +139,7 @@ const handleDelete = async (e: Event) => {
   border: none;
   cursor: pointer;
   padding: $spacing-xs;
-  
+
   &:hover {
     opacity: 0.8;
   }

@@ -10,21 +10,34 @@
         {{ isFavorite ? '❤️' : '🤍' }}
       </button>
       <button class="icon-button" @click="showEditModal = true">✏️</button>
-      <button class="icon-button" @click="handleDelete">🗑️</button>
+      <button class="icon-button" @click="showDeleteModal = true">🗑️</button>
     </div>
 
-    <EditTrackModal
-      v-if="showEditModal"
-      :track="track"
-      @close="showEditModal = false"
-      @submit="handleUpdate"
-    />
+    <Teleport to="body">
+      <CreateTrackModal
+        v-if="showEditModal"
+        :track="track"
+        @close="showEditModal = false"
+        @submit="handleUpdate"
+      />
+
+      <DeleteConfirmModal
+        v-if="showDeleteModal"
+        :show="showDeleteModal"
+        item-type="track"
+        :is-loading="isDeleting"
+        @close="showDeleteModal = false"
+        @confirm="handleDelete"
+      />
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useToast } from 'vue-toastification'
 import type { Track } from '@/types'
-import EditTrackModal from '~/components/modals/EditTrackModal.vue'
+import CreateTrackModal from '~/components/modals/CreateTrackModal.vue'
+import DeleteConfirmModal from '~/components/modals/DeleteConfirmModal.vue'
 
 const props = defineProps<{
   track: Track
@@ -32,7 +45,10 @@ const props = defineProps<{
 }>()
 
 const store = useMusicStore()
+const toast = useToast()
 const showEditModal = ref(false)
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
 
 const isFavorite = computed(() => store.favorites.tracks.some((t) => t.id === props.track.id))
 
@@ -50,7 +66,7 @@ const toggleFavorite = async () => {
       await store.addToFavorites('track', props.track.id)
     }
   } catch (error) {
-    console.error('Failed to toggle favorite:', error)
+    toast.error(`Failed to update favorites: ${error}`)
   }
 }
 
@@ -58,18 +74,22 @@ const handleUpdate = async (data: Partial<Track>) => {
   try {
     await store.updateTrack(props.track.id, data)
     showEditModal.value = false
+    toast.success('Track updated successfully')
   } catch (error) {
-    console.error('Failed to update track:', error)
+    toast.error(`Failed to update track: ${error}`)
   }
 }
 
 const handleDelete = async () => {
-  if (confirm('Are you sure you want to delete this track?')) {
-    try {
-      await store.deleteTrack(props.track.id)
-    } catch (error) {
-      console.error('Failed to delete track:', error)
-    }
+  try {
+    isDeleting.value = true
+    await store.deleteTrack(props.track.id)
+    toast.success('Track deleted successfully')
+  } catch (error) {
+    toast.error(`Failed to delete track: ${error}`)
+  } finally {
+    isDeleting.value = false
+    showDeleteModal.value = false
   }
 }
 </script>
@@ -83,7 +103,7 @@ const handleDelete = async () => {
   background: $background-secondary;
   margin-bottom: $spacing-sm;
   transition: transform 0.2s;
-	border-radius: 8px;
+  border-radius: 8px;
 
   &:hover {
     transform: translateY(-2px);

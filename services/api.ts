@@ -132,12 +132,14 @@ export const api = {
     return this.handleResponse(response)
   },
 
-  // Общий обработчик ответов
+  // Common response handler
   async handleResponse(response: Response) {
     if (!response.ok) {
       const error = await response.json().catch(() => ({}))
       throw new Error(error.message || `API request failed with status ${response.status}`)
     }
-    return response.json()
+
+    const text = await response.text()
+    return text ? JSON.parse(text) : null
   },
 }

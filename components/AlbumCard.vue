@@ -3,33 +3,77 @@
     <div class="album-header">
       <h4>{{ album.name }}</h4>
       <div class="actions">
-        <button @click.stop="toggleFavorite" class="icon-button">
+        <button class="icon-button" @click.stop="toggleFavorite">
           {{ isFavorite ? '❤️' : '🤍' }}
         </button>
-        <button @click.stop="showEditModal = true" class="icon-button">✏️</button>
-        <button @click.stop="handleUpdate" class="icon-button">✅</button>
-        <button @click.stop="handleDelete" class="icon-button">🗑️</button>
+        <button
+          class="icon-button"
+          @click.stop.prevent="
+            (e) => {
+              e.preventDefault()
+              showEditModal = true
+            }
+          "
+        >
+          ✏️
+        </button>
+        <button
+          class="icon-button"
+          @click.stop.prevent="
+            (e) => {
+              e.preventDefault()
+              showDeleteModal = true
+            }
+          "
+        >
+          🗑️
+        </button>
       </div>
     </div>
     <div class="album-info">
       <span class="year">{{ album.year }}</span>
     </div>
+
+    <Teleport to="body">
+      <CreateAlbumModal
+        v-if="showEditModal"
+        :album="album"
+        @close="showEditModal = false"
+        @submit="handleUpdate"
+      />
+
+      <DeleteConfirmModal
+        v-if="showDeleteModal"
+        :show="showDeleteModal"
+        item-type="album"
+        :is-loading="isDeleting"
+        @close="showDeleteModal = false"
+        @confirm="handleDelete"
+      />
+    </Teleport>
   </NuxtLink>
 </template>
 
 <script setup lang="ts">
+import { useToast } from 'vue-toastification'
 import type { Album } from '@/types'
+import CreateAlbumModal from '~/components/modals/CreateAlbumModal.vue'
+import DeleteConfirmModal from '~/components/modals/DeleteConfirmModal.vue'
 
 const props = defineProps<{
   album: Album
 }>()
 
 const store = useMusicStore()
+const toast = useToast()
 const showEditModal = ref(false)
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
 
 const isFavorite = computed(() => store.favorites.albums.some((a) => a.id === props.album.id))
 
-const toggleFavorite = async () => {
+const toggleFavorite = async (e: Event) => {
+  e.preventDefault()
   try {
     if (isFavorite.value) {
       await store.removeFromFavorites('album', props.album.id)
@@ -37,19 +81,31 @@ const toggleFavorite = async () => {
       await store.addToFavorites('album', props.album.id)
     }
   } catch (error) {
-    console.error(error)
+    toast.error(`Failed to update favorites: ${error}`)
   }
 }
 
 const handleDelete = async () => {
-  if (confirm('Are you sure you want to delete this album?')) {
+  try {
+    isDeleting.value = true
     await store.deleteAlbum(props.album.id)
+    toast.success('Album deleted successfully')
+  } catch (error) {
+    toast.error(`Failed to delete album: ${error}`)
+  } finally {
+    isDeleting.value = false
+    showDeleteModal.value = false
   }
 }
 
 const handleUpdate = async (data: Partial<Album>) => {
-  await store.updateAlbum(props.album.id, data)
-  showEditModal.value = false
+  try {
+    await store.updateAlbum(props.album.id, data)
+    showEditModal.value = false
+    toast.success('Album updated successfully')
+  } catch (error) {
+    toast.error(`Failed to update album: ${error}`)
+  }
 }
 </script>
 

@@ -5,7 +5,7 @@
         <NuxtLink to="/" class="logo">Music Library</NuxtLink>
         <div class="nav-links">
           <template v-if="auth.isAuthenticated">
-            <NuxtLink to="/favorites" class="button secondary"> ❤️ Favorites </NuxtLink>
+            <NuxtLink to="/favorites" class="favorites-button">❤️</NuxtLink>
             <span class="user-name">{{ auth.user?.login }}</span>
             <button class="button primary" @click="handleLogout">Logout</button>
           </template>
@@ -77,5 +77,14 @@ const handleLogout = () => {
 .user-name {
   color: $text-secondary;
   margin-right: $spacing-sm;
+}
+
+.favorites-button {
+	text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
 }
 </style>

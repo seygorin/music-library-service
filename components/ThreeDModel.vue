@@ -1,8 +1,7 @@
 <template>
-  <div ref="canvasContainer" class="three-d-model">
-    <div v-if="isLoading" class="loading-overlay">
-      <div class="loading-spinner"></div>
-    </div>
+  <div>
+    <LoadingSpinner v-if="isLoading" class="model-spinner" />
+    <div ref="canvasContainer" class="three-d-model"></div>
   </div>
 </template>
 
@@ -12,6 +11,7 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { AsciiEffect } from 'three/examples/jsm/effects/AsciiEffect'
+import LoadingSpinner from '~/components/LoadingSpinner.vue'
 
 const canvasContainer = ref<HTMLElement | null>(null)
 const isLoading = ref(true)
@@ -131,6 +131,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.model-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+}
+
 .three-d-model {
   position: fixed;
   top: 0;
@@ -140,43 +148,5 @@ onMounted(() => {
   height: calc(100vh - 68px);
   z-index: -1;
   overflow: hidden;
-}
-
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  z-index: 1;
-}
-
-.loading-spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #ffffff;
-  border-top: 2px solid #000;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-
-.loading-text {
-  font-size: 1.2rem;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 </style>

@@ -44,7 +44,6 @@ const form = ref({
 })
 
 const handleClose = () => {
-  console.log('CreateAlbumModal: Closing modal')
   emit('close')
 }
 

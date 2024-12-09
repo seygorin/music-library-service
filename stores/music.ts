@@ -175,5 +175,29 @@ export const useMusicStore = defineStore('music', {
         throw error
       }
     },
+
+    async updateAlbum(id: string, data: Partial<Album>) {
+      try {
+        const updatedAlbum = await api.updateAlbum(id, data)
+        const index = this.albums.findIndex((a) => a.id === id)
+        if (index !== -1) {
+          this.albums[index] = updatedAlbum
+        }
+        return updatedAlbum
+      } catch (error) {
+        this.error = 'Failed to update album'
+        throw error
+      }
+    },
+
+    async deleteAlbum(id: string) {
+      try {
+        await api.deleteAlbum(id)
+        this.albums = this.albums.filter((a) => a.id !== id)
+      } catch (error) {
+        this.error = 'Failed to delete album'
+        throw error
+      }
+    },
   },
 })

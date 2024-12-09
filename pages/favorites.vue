@@ -1,7 +1,5 @@
 <template>
   <div class="favorites-page">
-    <h1>Favorites</h1>
-
     <LoadingSpinner v-if="store.loading" />
 
     <template v-else>
@@ -22,7 +20,12 @@
       <section v-if="store.favorites.tracks.length" class="section">
         <h2>Favorite Tracks</h2>
         <div class="tracks-list">
-          <TrackCard v-for="track in store.favorites.tracks" :key="track.id" :track="track" />
+          <TrackCard
+            v-for="(track, index) in store.favorites.tracks"
+            :key="track.id"
+            :track="track"
+            :index="index"
+          />
         </div>
       </section>
 
