@@ -41,6 +41,7 @@ import type { Track } from '@/types'
 const route = useRoute()
 const albumId = route.params.id as string
 const store = useMusicStore()
+const { setMeta } = usePageMeta()
 const showCreateModal = ref(false)
 const loading = ref(false)
 
@@ -68,6 +69,12 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+watchEffect(() => {
+  if (album.value) {
+    setMeta(`${album.value.name}`, `Explore albums and tracks by ${album.value?.name}`)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -80,7 +87,7 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: $spacing-xl;
-	border-radius: 8px;
+  border-radius: 8px;
 }
 
 .title-section {

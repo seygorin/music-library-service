@@ -26,9 +26,16 @@
 <script setup lang="ts">
 import CreateArtistModal from '~/components/modals/CreateArtistModal.vue'
 import type { Artist } from '@/types'
+import { usePageMeta } from '~/composables/usePageMeta'
 
 const store = useMusicStore()
 const showCreateModal = ref(false)
+const { setMeta } = usePageMeta()
+
+setMeta(
+  'Artists',
+  'Browse and manage your favorite artists'
+)
 
 onMounted(() => {
   store.fetchArtists()

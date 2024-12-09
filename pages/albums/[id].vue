@@ -30,7 +30,9 @@
 <script setup lang="ts">
 import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import CreateAlbumModal from '~/components/modals/CreateAlbumModal.vue'
+import { usePageMeta } from '~/composables/usePageMeta'
 
+const { setMeta } = usePageMeta()
 const route = useRoute()
 const artistId = route.params.id as string
 const store = useMusicStore()
@@ -59,6 +61,15 @@ onMounted(async () => {
     await Promise.all([store.fetchArtists(), store.fetchAlbums()])
   } finally {
     loading.value = false
+  }
+})
+
+watchEffect(() => {
+  if (artist.value) {
+    setMeta(
+      `${artist.value.name}`,
+      `Listen to ${artist.value.name} and explore the tracks`
+    )
   }
 })
 </script>

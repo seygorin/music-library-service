@@ -18,6 +18,14 @@
 
 <script setup lang="ts">
 import ThreeDModel from '~/components/ThreeDModel.vue'
+import { usePageMeta } from '~/composables/usePageMeta'
+
+const { setMeta } = usePageMeta()
+
+setMeta(
+  'Home',
+  'Discover and manage your music collection with our modern music library application'
+)
 </script>
 
 <style lang="scss" scoped>

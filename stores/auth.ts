@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 
+const BASE_URL = '/api'
+
 interface AuthState {
   accessToken: string | null
   refreshToken: string | null
@@ -27,13 +29,21 @@ export const useAuthStore = defineStore('auth', {
     async login(credentials: { login: string; password: string }) {
       try {
         this.loading = true
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch(`${BASE_URL}/auth/login`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
           body: JSON.stringify(credentials),
+          credentials: 'include',
+          mode: 'cors'
         })
 
-        if (!response.ok) throw new Error('Login failed')
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.message || 'Login failed')
+        }
 
         const data = await response.json()
         this.accessToken = data.accessToken
@@ -44,6 +54,8 @@ export const useAuthStore = defineStore('auth', {
           userId: payload.userId,
           login: payload.login,
         }
+
+        return data
       } finally {
         this.loading = false
       }
@@ -52,13 +64,17 @@ export const useAuthStore = defineStore('auth', {
     async register(userData: { login: string; password: string }) {
       try {
         this.loading = true
-        const response = await fetch('/api/auth/signup', {
+        const response = await fetch(`${BASE_URL}/auth/signup`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(userData),
+          credentials: 'include',
         })
 
-        if (!response.ok) throw new Error('Registration failed')
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.message || 'Registration failed')
+        }
         return response.json()
       } finally {
         this.loading = false
