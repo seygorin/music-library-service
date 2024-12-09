@@ -70,11 +70,11 @@ const handleConfirm = () => {
   color: white;
 
   &:hover {
-    background-color: darken($danger-color, 10%);
+    background-color: ($danger-color, 10%);
   }
 
   &:disabled {
-    background-color: lighten($danger-color, 20%);
+    background-color: ($danger-color, 20%);
     cursor: not-allowed;
   }
 }
