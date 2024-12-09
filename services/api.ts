@@ -1,15 +1,20 @@
-const DEV_MODE = process.env.NODE_ENV === 'development'
-const BASE_URL = DEV_MODE ? '/api' : process.env.NUXT_API_BASE_URL
+const config = useRuntimeConfig()
+const BASE_URL = config.public.apiBaseUrl
 
 export const api = {
   async fetch(endpoint: string, options?: RequestInit) {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const url = endpoint.startsWith('http') 
+      ? endpoint 
+      : `${BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`
+
+    const response = await fetch(url, {
       ...options,
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         ...options?.headers,
-      },
+      }
     })
     return response
   },
