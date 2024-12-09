@@ -20,8 +20,8 @@ Visit the application at: [https://music-library-service.vercel.app](https://mus
 1. Clone the repository:
 
 ```bash
-git clone <https://github.com/seygorin/music-library-service.git>
-cd <music-library-service>
+git clone https://github.com/seygorin/music-library-service.git
+cd music-library-service
 ```
 
 2. Install dependencies:
@@ -30,17 +30,7 @@ cd <music-library-service>
 npm install
 ```
 
-3. Create .env files:
-
-```env:.env.development
-NUXT_API_BASE_URL=/api
-```
-
-```env:.env.production
-NUXT_API_BASE_URL=http://localhost:4000
-```
-
-4. Start development server:
+3. Start development server:
 ```bash
 npm run dev
 ```
