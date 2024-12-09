@@ -1,8 +1,5 @@
 import { defineStore } from 'pinia'
 
-const config = useRuntimeConfig()
-const BASE_URL = config.public.apiBaseUrl
-
 interface AuthState {
   accessToken: string | null
   refreshToken: string | null
@@ -30,15 +27,14 @@ export const useAuthStore = defineStore('auth', {
     async login(credentials: { login: string; password: string }) {
       try {
         this.loading = true
-        const response = await fetch(`${BASE_URL}/auth/login`, {
+        const response = await fetch(`/api/auth/login`, {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            Accept: 'application/json',
           },
           body: JSON.stringify(credentials),
           credentials: 'include',
-          mode: 'cors'
         })
 
         if (!response.ok) {
@@ -65,15 +61,14 @@ export const useAuthStore = defineStore('auth', {
     async register(userData: { login: string; password: string }) {
       try {
         this.loading = true
-        const response = await fetch(`${BASE_URL}/auth/signup`, {
+        const response = await fetch(`/api/auth/signup`, {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            Accept: 'application/json',
           },
           body: JSON.stringify(userData),
           credentials: 'include',
-          mode: 'cors'
         })
 
         if (!response.ok) {

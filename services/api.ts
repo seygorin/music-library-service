@@ -1,11 +1,13 @@
-const config = useRuntimeConfig()
-const BASE_URL = config.public.apiBaseUrl
+const getBaseUrl = () => {
+  const config = useRuntimeConfig()
+  return config.public.apiBaseUrl
+}
 
 export const api = {
   async fetch(endpoint: string, options?: RequestInit) {
     const url = endpoint.startsWith('http') 
       ? endpoint 
-      : `${BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`
+      : `${getBaseUrl()}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`
 
     const response = await fetch(url, {
       ...options,
