@@ -1,5 +1,9 @@
 <template>
-  <div ref="canvasContainer" class="three-d-model"></div>
+  <div ref="canvasContainer" class="three-d-model">
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -10,9 +14,17 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { AsciiEffect } from 'three/examples/jsm/effects/AsciiEffect'
 
 const canvasContainer = ref<HTMLElement | null>(null)
+const isLoading = ref(true)
 
 onMounted(() => {
   if (!canvasContainer.value) return
+
+  const timeoutId = setTimeout(() => {
+    if (isLoading.value) {
+      isLoading.value = false
+      console.warn('3D model loading timed out')
+    }
+  }, 10000)
 
   const backgroundScene = new THREE.Scene()
   const modelScene = new THREE.Scene()
@@ -67,6 +79,9 @@ onMounted(() => {
   loader.load(
     'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb',
     (gltf) => {
+      clearTimeout(timeoutId)
+      isLoading.value = false
+
       const model = gltf.scene
       model.scale.set(0.48, 0.48, 0.48)
       model.position.set(-0.2, 0, 0)
@@ -82,21 +97,17 @@ onMounted(() => {
 
       const animate = () => {
         requestAnimationFrame(animate)
-
         model.rotation.y += 0.01
-
         controls.update()
-
         renderer.render(backgroundScene, camera)
         effect.render(modelScene, camera)
       }
 
       animate()
     },
-    (xhr) => {
-      console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-    },
     (error) => {
+      clearTimeout(timeoutId)
+      isLoading.value = false
       console.error('An error happened:', error)
     }
   )
@@ -113,6 +124,7 @@ onMounted(() => {
   window.addEventListener('resize', handleResize)
 
   onUnmounted(() => {
+    clearTimeout(timeoutId)
     window.removeEventListener('resize', handleResize)
   })
 })
@@ -128,5 +140,43 @@ onMounted(() => {
   height: calc(100vh - 68px);
   z-index: -1;
   overflow: hidden;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  z-index: 1;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loading-text {
+  font-size: 1.2rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
